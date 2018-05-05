@@ -17,6 +17,7 @@ import Data.Sequence (Seq)
 import qualified Data.Sequence as Seq
 
 -- $setup
+-- >>> :set -XRankNTypes
 -- >>> import Control.Lens (Fold, Getter, Lens', Prism', _Just, _Left, _Right, folded, matching, to, toListOf, worded)
 -- >>> import Data.Functor.Contravariant (Predicate(..))
 
