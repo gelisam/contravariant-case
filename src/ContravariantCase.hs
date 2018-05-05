@@ -118,8 +118,8 @@ matchProduct (Case getter fx : cases) = divide (viewViaIdentity getter &&& id)
 -- [Right "foo",Left Nothing]
 matchingViaFirst :: Getting (First a) s a -> s -> Either s a
 matchingViaFirst getting_ s = maybe (Left s) Right
-                         . preview getting_
-                         $ s
+                            . preview getting_
+                            $ s
 
 -- | A version of 'Case' whose first field is a @Prism'@.
 --
