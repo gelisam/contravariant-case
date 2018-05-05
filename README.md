@@ -2,6 +2,8 @@
 
 [`Contravariant`](http://hackage.haskell.org/package/contravariant-1.4.1/docs/Data-Functor-Contravariant.html#t:Contravariant) functors are indexed by an `a`, but you don't have a concrete value of type `a` you can examine and pattern-match on in order to guide the computation. The [`Divisible`](http://hackage.haskell.org/package/contravariant-1.4.1/docs/Data-Functor-Contravariant-Divisible.html#t:Divisible) and [`Decidable`](http://hackage.haskell.org/package/contravariant-1.4.1/docs/Data-Functor-Contravariant-Divisible.html#t:Decidable) type classes enable the functionality required to pattern-match on the `a`, but they expose this via an API which is hard to use. This package uses optics to re-expose this functionality in a way which looks more like pattern-matching and is thus hopefully more intuitive.
 
+## Without `contravariant-case`
+
 For example, let's try to implement a combinator which lifts a [`Predicate`](http://hackage.haskell.org/package/contravariant-1.4.1/docs/Data-Functor-Contravariant.html#t:Predicate) on elements to a `Predicate` on lists by making sure the `Predicate` accepts every element of the list. Implementing this using the methods provided by the [`contravariant`](http://hackage.haskell.org/package/contravariant) package requires us to convert the list into its sum-of-products representation, `Either () (a, [a])`:
 
     listToSOP :: [a] -> Either () (a, [a])
@@ -12,6 +14,8 @@ And we need to pay close attention to this representation in order to determine 
 
     allSatisfy :: Predicate a -> Predicate [a]
     allSatisfy p = choose listToSOP conquer (divide id p (allSatisfy p))
+
+## With `contravariant-case`
 
 With this package, we can write an implementation of `allSatisfy` which doesn't require `listToSOP`, and instead looks like we are pattern-matching on the list:
 
