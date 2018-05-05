@@ -238,7 +238,7 @@ type FoldCase = Case Seq
 --
 -- >>> :{
 -- let allEven' :: Predicate [Int]
---     allEven' = matchFold [Case folded $ Predicate even]
+--     allEven' = matchFold [Case each $ Predicate even]
 -- :}
 --
 -- >>> getPredicate allEven' $ [2,4,6]
