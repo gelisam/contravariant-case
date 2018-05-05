@@ -1,0 +1,19 @@
+name:                contravariant-case
+version:             0.1.0.0
+synopsis:            An API for Divisible and Decidable which looks like pattern-matching.
+homepage:            https://github.com/gelisam/contravariant-case
+license:             PublicDomain
+author:              Samuel Gélineau
+maintainer:          gelisam+github@gmail.com
+category:            Control
+build-type:          Simple
+cabal-version:       >=1.10
+
+library
+  exposed-modules:     ContravariantCase
+  build-depends:       base >=4.10 && <4.11
+                     , containers >= 0.5 && < 0.6
+                     , contravariant >= 1.4 && < 1.5
+                     , lens >= 4.15 && < 4.16
+  hs-source-dirs:      src
+  default-language:    Haskell2010
