@@ -39,7 +39,7 @@ The `allSatisfy` implementation above alternates between `matchSum` and `matchPr
       , Case (_Cons . _2) $ allSatisfy p
       ]
 
-`matchFold` uses the fact that combining a `Prism` with a `Getter` gives a [`Fold`](https://hackage.haskell.org/package/lens-4.16.1/docs/Control-Lens-Fold.html)s. While the 'Fold`s obtained by combining a `Prism` with a `Fold` will always focus on at most one element, in general `Fold`s can focus on multiple elements. We can use such a `Fold` to write an even shorter implementation:
+`matchFold` uses the fact that combining a `Prism` with a `Getter` gives a [`Fold`](https://hackage.haskell.org/package/lens-4.16.1/docs/Control-Lens-Fold.html). While the `Fold`s obtained by combining a `Prism` with a `Getter` will always focus on at most one element, in general `Fold`s can focus on multiple elements. We can use such a `Fold` to write an even shorter implementation:
 
     allSatisfy :: Predicate a -> Predicate [a]
     allSatisfy p = matchFold [Case each p]
