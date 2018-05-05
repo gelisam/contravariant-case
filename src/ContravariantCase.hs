@@ -234,16 +234,17 @@ type FoldCase = Case Seq
 -- >>> getPredicate (contraFold' . Predicate $ even) $ [2,4,7::Int]
 -- False
 --
--- Unlike 'matchProduct', a single case can select more than one piece:
+-- Unlike 'matchProduct', a single case can select more than one piece, so an
+-- even shorter implementation is possible:
 --
 -- >>> :{
--- let allEven' :: Predicate [Int]
---     allEven' = matchFold [Case each $ Predicate even]
+-- let contraFold'' :: Decidable f => f a -> f [a]
+--     contraFold'' fx = matchFold [ Case each fx ]
 -- :}
 --
--- >>> getPredicate allEven' $ [2,4,6]
+-- >>> getPredicate (contraFold'' . Predicate $ even) $ [2,4,6::Int]
 -- True
--- >>> getPredicate allEven' $ [2,4,7]
+-- >>> getPredicate (contraFold'' . Predicate $ even) $ [2,4,7::Int]
 -- False
 --
 -- And unlike 'matchSum', not all the constructors need to be covered:
