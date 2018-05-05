@@ -20,8 +20,51 @@ import qualified Data.Sequence as Seq
 -- >>> :set -XRankNTypes
 -- >>> import Control.Lens (Fold, Getter, Lens', Prism', _Just, _Left, _Right, folded, matching, to, toListOf, worded)
 -- >>> import Data.Functor.Contravariant (Predicate(..))
+--
+-- For example, let's try to implement a combinator which lifts a 'Predicate' on
+-- elements to a 'Predicate' on lists by making sure the 'Predicate' accepts
+-- every element of the list. Implementing this using the methods provided by
+-- "Data.Functor.Contravariant.Divisible" requires us to convert the list into
+-- its sum-of-products representation, @Either () (a, [a])@:
+--
+-- >>> :{
+-- listToSOP :: [a] -> Either () (a, [a])
+-- listToSOP []     = Left ()
+-- listToSOP (x:xs) = Right (x, xs)
+-- :}
+--
+-- And we need to pay close attention to this representation in order to
+-- determine the parts of the list on which the 'allSatisfy' implementation
+-- applies 'conquer', 'p', and the recursive call @allSatisfy p@:
+--
+-- >>> :{
+-- allSatisfy :: Predicate a -> Predicate [a]
+-- allSatisfy p = choose listToSOP conquer (divide id p (allSatisfy p))
+-- :}
+--
+-- With this module, we can write an implementation of 'allSatisfy' which
+-- doesn't require 'listToSOP', and instead looks like we are pattern-matching
+-- on the list:
+--
+-- >>> :{
+-- allSatisfy :: Predicate a -> Predicate [a]
+-- allSatisfy p = matchSum
+--   [ Case _Empty $ conquer
+--   , Case _Cons  $ matchProduct
+--     [ Case _1 $ p
+--     , Case _2 $ allSatisfy p
+--     ]
+--   ]
+-- :}
+--
+-- Or we can delegate most of the logic to the 'each' optic:
+--
+-- >>> :{
+-- allSatisfy :: Predicate a -> Predicate [a]
+-- allSatisfy p = matchFold [Case each p]
+-- :}
 
-
+-- |
 -- Associates a "pattern", represented by an optic and binding a single
 -- variable, with the action to perform on that bound variable.
 data Case newtype_ f s where
@@ -239,7 +282,7 @@ type FoldCase = Case Seq
 --
 -- >>> :{
 -- let contraFold'' :: Decidable f => f a -> f [a]
---     contraFold'' fx = matchFold [ Case each fx ]
+--     contraFold'' fx = matchFold [Case each fx]
 -- :}
 --
 -- >>> getPredicate (contraFold'' . Predicate $ even) $ [2,4,6::Int]
